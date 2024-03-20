@@ -18,7 +18,7 @@ void loop()
     2nd sequence: ROM command
     3rd sequence: DS18B20 command 
     */
-  byte rom_code[8]:  
+  byte rom_code[8]; 
 
   ow.reset();
   ow.write(0x33)
@@ -34,4 +34,15 @@ void loop()
   ow.write(0xCC);
   ow.write(0x44);
 
+    //Start sequence to read data from scratch
+  byte Scratchpad[9];
+
+  ow.reset();
+  ow.write(0xCC);
+  ow.write(0xBE)
+  for (int n=0; n<9; n++)
+  {
+    Scratchpad[n] = ow.read();
+  }
+  
 }
