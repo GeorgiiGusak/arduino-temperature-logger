@@ -1,13 +1,25 @@
 //Arduino temp sensor
 
 #include <OneWire.h>
-#define DS18B20_Pin 8
-OneWire ow(DS18B20_Pin);
+#include <RTClib.h>
 
+#define DS18B20_Pin 8
+
+OneWire ow(DS18B20_Pin);
+RTC_DS1307 rtc;
 
 void setup()
 {
   Serial.begin(9600);
+  if (!rtc.begin()) 
+  {
+    Serial.println('#couldnt find RTC');
+    while(1);
+  }
+  if (!rtc.isrunning())
+  {
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));    
+  }
 }
 
 void loop()
@@ -60,11 +72,12 @@ void loop()
   {
     registration_number += String(rom_code[i], HEX);
   }
-  Serial.println(registration_number);
+  Serial.print(registration_number);
+  Serial.print(", ");
 
   //Read Temperature info
   int16_t TempRead=(Scratchpad[1]<<8) | Scratchpad[0];
   float tempCelsius = (float)TempRead/16.0; //16=2**4
-  Serial.println(tempCelsius);
+  Serial.println(tempCelsius, 4);
   delay(1500);
 }
