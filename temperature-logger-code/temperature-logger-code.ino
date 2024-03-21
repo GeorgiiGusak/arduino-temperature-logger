@@ -2,8 +2,13 @@
 
 #include <OneWire.h>
 #include <RTClib.h>
+#include <SD.h>
+#include <SPI.h>
+#include "DS18B20.h"
 
 #define DS18B20_Pin 8
+
+const String logfile ="tsensor.log";
 
 OneWire ow(DS18B20_Pin);
 RTC_DS1307 rtc;
@@ -19,6 +24,13 @@ void setup()
   if (!rtc.isrunning())
   {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));    
+  }
+  // Add header
+  printOutputln("#Timestamp, deci-seconds, sensor-id, temperature");
+
+  if (!SD.begin(10))
+  {
+    Serial.println("#Card failed or not present");
   }
 }
 
@@ -72,12 +84,16 @@ void loop()
   {
     registration_number += String(rom_code[i], HEX);
   }
-  Serial.print(registration_number);
-  Serial.print(", ");
+  printOutput(getISOtime());
+  printOutput(", ");
+  printOutput((String)(millis()/100));
+  printOutput(", ");
+  printOutput(registration_number);
+  printOutput(", ");
 
   //Read Temperature info
   int16_t TempRead=(Scratchpad[1]<<8) | Scratchpad[0];
   float tempCelsius = (float)TempRead/16.0; //16=2**4
-  Serial.println(tempCelsius, 4);
+  printOutputln((String)tempCelsius);
   delay(1500);
 }
