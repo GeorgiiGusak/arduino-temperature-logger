@@ -1,13 +1,13 @@
 //Arduino temp sensor
 
-#include OneWire.h
+#include <OneWire.h>
 #define DS18B20_Pin 8
-Onewire on(DS18B20_Pin);
+OneWire ow(DS18B20_Pin);
 
 
 void setup()
 {
-  Serial.begin(9600)
+  Serial.begin(9600);
 }
 
 void loop()
@@ -21,7 +21,7 @@ void loop()
   byte rom_code[8]; 
 
   ow.reset();
-  ow.write(0x33)
+  ow.write(0x33);
   
   for (int i=0; i<8; i++)
   {
@@ -39,7 +39,7 @@ void loop()
 
   ow.reset();
   ow.write(0xCC);
-  ow.write(0xBE)
+  ow.write(0xBE);
   for (int n=0; n<9; n++)
   {
     Scratchpad[n] = ow.read();
@@ -54,7 +54,13 @@ void loop()
   String registration_number = "";
   for (int i=1; i<7; i++)
   {
-    registration number += String(rom_code[i], HEX)
+    registration_number += String(rom_code[i], HEX);
   }
-  Serial.println(registration_number)
+  Serial.println(registration_number);
+
+  //Read Temperature info
+  int16_t TempRead=(Scratchpad[1]<<8) | Scratchpad[0];
+  float tempCelsius = (float)TempRead/16.0; //16=2**4
+  Serial.println(tempCelsius);
+  delay(1500);
 }
