@@ -7,7 +7,7 @@ Onewire on(DS18B20_Pin);
 
 void setup()
 {
-
+  Serial.begin(9600)
 }
 
 void loop()
@@ -45,4 +45,16 @@ void loop()
     Scratchpad[n] = ow.read();
   }
   
+  //Extract info from retrieved data
+  //Get Serial N from ROM code data
+  if (rom_code[0] != 0x28)
+  {
+    Serial.print('#is not a DS18B20');
+  }
+  String registration_number = "";
+  for (int i=1; i<7; i++)
+  {
+    registration number += String(rom_code[i], HEX)
+  }
+  Serial.println(registration_number)
 }
