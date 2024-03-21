@@ -33,7 +33,11 @@ void loop()
   ow.reset();
   ow.write(0xCC);
   ow.write(0x44);
-
+    // Wait for temp to convert
+    while (ow.read_bit() == 0)
+    {
+      delay(10);
+    }
     //Start sequence to read data from scratch
   byte Scratchpad[9];
 
