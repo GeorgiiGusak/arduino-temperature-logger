@@ -25,6 +25,7 @@ void setup()
   {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));    
   }
+  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));    
   // Add header
   printOutputln("#Timestamp, deci-seconds, sensor-id, temperature");
 
